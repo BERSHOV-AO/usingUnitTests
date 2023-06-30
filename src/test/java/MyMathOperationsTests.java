@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 public class MyMathOperationsTests {
 
     MyMathOperations sut;
@@ -14,6 +17,7 @@ public class MyMathOperationsTests {
     @BeforeEach
     public void beforeEach() {
         sut = new MyMathOperations();
+        intList = Arrays.asList(1, 2, 5, 16, -1, -2, 0, 32, 3, 5, 8, 23, 4);
     }
 
     @AfterEach
@@ -21,53 +25,62 @@ public class MyMathOperationsTests {
         sut = null;
     }
 
+    //-----------------------testPositiveNumbers-----------------------------
     @Test
-    public void testPositiveNumbers() {
-        // given:
-        intList = Arrays.asList(1, 2, 5, 16, -1, -2, 0, 32, 3, 5, 8, 23, 4);
-        List<Integer> expectedList = Arrays.asList(1, 2, 5, 16, 32, 3, 5, 8, 23, 4);
-
-        // when:
+    public void testPositiveNumbers_whenCheck_thenContainsElements() {
         List<Integer> resultList = sut.positiveNumbers(intList);
-
-        // then:
-        Assertions.assertArrayEquals(expectedList.toArray(), resultList.toArray());
+        assertThat(resultList, contains(1, 2, 5, 16, 32, 3, 5, 8, 23, 4));
     }
 
     @Test
-    public void testEvenNumber() {
-        // given:
-        intList = Arrays.asList(1, 2, 5, 16, -1, -2, 0, 32, 75, 5, 8, 23, 88, 91, 11);
-        List<Integer> expectedList = Arrays.asList(2, 16, -2, 0, 32, 8, 88);
-
-        // when:
-        List<Integer> resultList = sut.evenNumber(intList);
-
-        // then:
-        Assertions.assertArrayEquals(expectedList.toArray(), resultList.toArray());
+    public void testPositiveNumbers_whenCheck_thenHasSize() {
+        List<Integer> resultList = sut.positiveNumbers(intList);
+        assertThat(resultList, hasSize(10));
     }
 
+    @Test
+    public void testPositiveNumbers_whenCheck_thenPositiveElements() {
+        List<Integer> resultList = sut.positiveNumbers(intList);
+        assertThat(resultList, everyItem(greaterThan(0)));
+    }
+
+    //-----------------------testEvenNumber---------------------------------
+    @Test
+    public void testEvenNumber_whenCheck_thenContainsElements() {
+        List<Integer> resultList = sut.evenNumber(intList);
+        assertThat(resultList, contains(2, 16, -2, 0, 32, 8, 4));
+    }
+
+    @Test
+    public void testEvenNumber_whenCheck_thenHasSize() {
+        List<Integer> resultList = sut.evenNumber(intList);
+        assertThat(resultList, hasSize(7));
+    }
+
+    @Test
+    public void testEvenNumber_whenCheck_contains() {
+        List<Integer> resultList = sut.evenNumber(intList);
+        assertThat(resultList, hasItems(16, 8));
+    }
+
+    @Test
+    public void testEvenNumber_whenCheck_thenContainInAnyOrder() {
+        List<Integer> resultList = sut.evenNumber(intList);
+        assertThat(resultList.toArray(), arrayContainingInAnyOrder(32, 8, 4, 2, 16, -2, 0));
+    }
+
+    //------------------testCommissionPercentCalc-------------------------
     @Test
     public void testCommissionPercentCalc_MinCommission() {
-        // given:
-        int amount = 550, expected = 35;
-
-        // when:
+        int amount = 550;
         int result = sut.commissionPercentCalc(amount);
-
-        // then:
-        Assertions.assertEquals(expected, result);
+        assertThat(result, is(35));
     }
 
     @Test
     public void testCommissionPercentCalc_Commission() {
-        // given:
-        int amount = 10_550, expected = 79;
-
-        // when:
+        int amount = 10_550;
         int result = sut.commissionPercentCalc(amount);
-
-        // then:
-        Assertions.assertEquals(expected, result);
+        assertThat(result, is(79));
     }
 }
